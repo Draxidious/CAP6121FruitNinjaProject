@@ -12,10 +12,10 @@ public class LeanMovement : MonoBehaviour
     public float acceleration = 2.0f; // How quickly the player reaches max speed
     public float leanThreshold = 0.1f; // How much the player needs to lean to start moving
 
-    private float initialX; // Initial side-to-side position
-    private float initialZ; // Initial forward-backward position
-    private float currentSpeedX = 0.0f; // Current speed for left-right
-    private float currentSpeedZ = 0.0f; // Current speed for forward-backward
+    public float initialX; // Initial side-to-side position
+    public float initialZ; // Initial forward-backward position
+    public float currentSpeedX = 0.0f; // Current speed for left-right
+    public float currentSpeedZ = 0.0f; // Current speed for forward-backward
     private bool movementEnabled = false; // Toggle for lean movement
     private bool buttonPressed = false;
 
@@ -45,7 +45,8 @@ public class LeanMovement : MonoBehaviour
 
                 if (movementEnabled)
                     initialZ = headTransform.localPosition.z; // Reset initial position when enabling movement
-            }
+				    initialX = headTransform.localPosition.x;
+			}
 
         }
         else
