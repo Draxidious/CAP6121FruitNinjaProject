@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8465083603954037733}
   m_Layer: 3
   m_Name: WatermelonEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bcb86eec40873046bae17409b58e6c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 1.5
   health: 80
   damage: 10
   detectionRadius: 10
@@ -163,6 +163,8 @@ MonoBehaviour:
   canShoot: 1
   canJump: 0
   canFloat: 0
+  damageCooldown: 1
+  pushBackForce: 5
 --- !u!114 &8465083603954037733
 MonoBehaviour:
   m_ObjectHideFlags: 0

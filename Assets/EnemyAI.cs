@@ -14,12 +14,15 @@ public class EnemyAI : MonoBehaviour
     public bool canShoot = false;
     public bool canJump = false;
     public bool canFloat = false; // Toggle for floating or grounded movement
+    public float damageCooldown = 1f; // Cooldown time before taking damage again
+    public float pushBackForce = 5f; // Force applied when taking damage
 
     private Transform player;
     private Rigidbody rb;
     private float nextShootTime;
     private float nextJumpTime;
     private bool isTouchingPlayer = false;
+    private bool canTakeDamage = true;
 
     void Start()
     {
@@ -86,6 +89,33 @@ public class EnemyAI : MonoBehaviour
     void KeepUpright()
     {
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+    }
+
+    public void TakeDamage(float amount)
+    {
+        if (canTakeDamage)
+        {
+            health -= amount;
+            canTakeDamage = false;
+            Invoke(nameof(ResetDamageCooldown), damageCooldown);
+
+            // Push back enemy away from the player
+            if (player != null && rb != null)
+            {
+                Vector3 pushDirection = (transform.position - player.position).normalized;
+                rb.AddForce(pushDirection * pushBackForce, ForceMode.Impulse);
+            }
+
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    private void ResetDamageCooldown()
+    {
+        canTakeDamage = true;
     }
 
     void OnCollisionEnter(Collision collision)

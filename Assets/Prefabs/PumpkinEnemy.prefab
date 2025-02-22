@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 432954421250670412}
   m_Layer: 3
   m_Name: PumpkinEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -163,6 +163,7 @@ MonoBehaviour:
   canShoot: 0
   canJump: 0
   canFloat: 0
+  damageCooldown: 1
 --- !u!114 &432954421250670412
 MonoBehaviour:
   m_ObjectHideFlags: 0
