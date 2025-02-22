@@ -16,6 +16,7 @@ public class EnemyAI : MonoBehaviour
     public bool canFloat = false; // Toggle for floating or grounded movement
     public float damageCooldown = 1f; // Cooldown time before taking damage again
     public float pushBackForce = 5f; // Force applied when taking damage
+    public float projectileDamageMultiplier = 2f; // Multiplier for projectile damage
 
     private Transform player;
     private Rigidbody rb;
@@ -105,11 +106,18 @@ public class EnemyAI : MonoBehaviour
                 Vector3 pushDirection = (transform.position - player.position).normalized;
                 rb.AddForce(pushDirection * pushBackForce, ForceMode.Impulse);
             }
+        }
+    }
 
-            if (health <= 0)
-            {
-                Destroy(gameObject);
-            }
+    public void TakeProjectileDamage(float amount)
+    {
+        health -= amount * projectileDamageMultiplier;
+
+        // Push back enemy away from the player
+        if (player != null && rb != null)
+        {
+            Vector3 pushDirection = (transform.position - player.position).normalized;
+            rb.AddForce(pushDirection * pushBackForce, ForceMode.Impulse);
         }
     }
 
