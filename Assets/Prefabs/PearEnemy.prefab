@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4200583379131073904}
   - component: {fileID: 8996928243928823819}
   - component: {fileID: 1217677900506970096}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HealthBarBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2861327318856394781}
   - component: {fileID: 3753097518921799047}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HealthBarCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 6095300518552127187}
   - component: {fileID: 746845678795447254}
   - component: {fileID: 8686311115126281075}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 1741272868742542162}
   - component: {fileID: 1663853288602893245}
   - component: {fileID: 7501317272305651746}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PearEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +349,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &1663853288602893245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,11 +362,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bcb86eec40873046bae17409b58e6c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  speed: 3
   health: 100
   damage: 10
   detectionRadius: 15
-  shootRadius: 10
   projectilePrefab: {fileID: 0}
   shootInterval: 2
   jumpForce: 10

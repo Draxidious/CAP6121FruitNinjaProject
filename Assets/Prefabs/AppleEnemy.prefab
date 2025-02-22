@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 500206045775172780}
   - component: {fileID: 1326977232282291428}
   - component: {fileID: 1548435439245498404}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: AppleEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,11 +124,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bcb86eec40873046bae17409b58e6c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  speed: 2
   health: 100
   damage: 10
   detectionRadius: 10
-  shootRadius: 10
   projectilePrefab: {fileID: 0}
   shootInterval: 2
   jumpForce: 5
@@ -163,7 +162,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &1548435439245498404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,7 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7088203206033466517}
   - component: {fileID: 4902619474523124282}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HealthBarCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +247,7 @@ GameObject:
   - component: {fileID: 5142563786600966519}
   - component: {fileID: 8202029350192604161}
   - component: {fileID: 7499614168536272894}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HealthBarBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,7 +323,7 @@ GameObject:
   - component: {fileID: 3541815345355546415}
   - component: {fileID: 2063497504205606228}
   - component: {fileID: 2038024938073434339}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

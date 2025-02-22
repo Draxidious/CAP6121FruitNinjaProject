@@ -6,7 +6,6 @@ public class EnemyAI : MonoBehaviour
     public float health = 100f;
     public float damage = 10f;
     public float detectionRadius = 10f;
-    public float shootRadius = 10f;
     public GameObject projectilePrefab;
     public float shootInterval = 2f;
     public float jumpForce = 5f;
@@ -20,6 +19,7 @@ public class EnemyAI : MonoBehaviour
     private Rigidbody rb;
     private float nextShootTime;
     private float nextJumpTime;
+    private bool isTouchingPlayer = false;
 
     void Start()
     {
@@ -32,7 +32,7 @@ public class EnemyAI : MonoBehaviour
         if (player == null) return;
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance <= detectionRadius)
+        if (distance <= detectionRadius && !isTouchingPlayer)
         {
             Vector3 direction = (moveAwayFromPlayer ? transform.position - player.position : player.position - transform.position).normalized;
 
@@ -52,15 +52,11 @@ public class EnemyAI : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
-        if (distance <= shootRadius)
+        if (canShoot && Time.time >= nextShootTime)
         {
-            if (canShoot && Time.time >= nextShootTime)
-            {
-                Shoot();
-                nextShootTime = Time.time + shootInterval;
-            }
+            Shoot();
+            nextShootTime = Time.time + shootInterval;
         }
-        
 
         if (canJump && Time.time >= nextJumpTime)
         {
@@ -92,11 +88,27 @@ public class EnemyAI : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isTouchingPlayer = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isTouchingPlayer = false;
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, shootRadius);
     }
 }

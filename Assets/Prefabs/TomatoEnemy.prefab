@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3543218569933670174}
   - component: {fileID: 4622924423349320904}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HealthBarCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 2820683995511408229}
   - component: {fileID: 2432293735783753033}
   - component: {fileID: 94520150788703921}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TomatoEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &94520150788703921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 3128611346611119656}
   - component: {fileID: 3513153399059858264}
   - component: {fileID: 6559723358793010828}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HealthBarBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,7 +324,7 @@ GameObject:
   - component: {fileID: 540489328834453180}
   - component: {fileID: 7392752647314459338}
   - component: {fileID: 4154192771665147174}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
