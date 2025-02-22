@@ -11,7 +11,7 @@ public class CustomVignette : MonoBehaviour
 	[Tooltip("The script that provides the speed value.")]
 	public UnicycleMovement speedProvider; // Change MonoBehaviour to the actual type
 
-	[Tooltip("The name of the property or field on the speed provider that holds the speed (float).")]
+    [Tooltip("The name of the property or field on the speed provider that holds the speed (float).")]
 	public string speedPropertyName = "CurrentSpeed";
 
 	[Tooltip("The speed at which the vignette starts to appear.")]
