@@ -1,0 +1,45 @@
+{
+    "name": "InputActions",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "aace0a35-d75c-445b-846f-599665c0a6ff",
+            "actions": [
+                {
+                    "name": "Grapple",
+                    "type": "Button",
+                    "id": "890cd2dc-580a-4967-b4fd-f1bdfff3cc0d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3aed91ca-40ac-49d0-95d4-f36046dbc495",
+                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grapple",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c9d59a8b-fbc6-4f1f-aef8-0aedd754d9f5",
+                    "path": "<XRSimulatedController>{LeftHand}/triggerButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grapple",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -719,7 +719,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5450540492740250153}
-  - component: {fileID: 3172569418156447232}
   - component: {fileID: 8651535592238589499}
   m_Layer: 0
   m_Name: PlayerManager
@@ -747,23 +746,6 @@ Transform:
   - {fileID: 934494030759804866}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 208.199, z: 0}
---- !u!114 &3172569418156447232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8088027419151981249}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f650d2e24b073054c98c352f1cb8337a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startButton: {fileID: 0}
-  stopButton: {fileID: 0}
-  text: {fileID: 0}
-  Command: 
-  lastCommand: 
 --- !u!114 &8651535592238589499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1383,7 +1365,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1767192434, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1390944292031164305}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 202364687, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6692296000251354109}
+    - targetCorrespondingSourceObject: {fileID: 1670256624, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6977394074379104774}
   m_SourcePrefab: {fileID: 100100000, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
 --- !u!4 &2403709734581495121 stripped
 Transform:
@@ -1395,6 +1383,36 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1680501587, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
   m_PrefabInstance: {fileID: 3930753892247767935}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3930753891685604495 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1670256624, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 3930753892247767935}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6977394074379104774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3930753891685604495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce5d14a266c1e34f9e04bda2598a8f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDistance: 50
+  grappleSpeed: 10
+  grappleJumpBoost: 5
+  grappleLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  lineRenderer: {fileID: 0}
+  lineRendererRetractSpeed: 5
+  grappleAction: {fileID: 958488077618707032, guid: 75570b0cf09bcc84483239e68aa94942, type: 3}
+  playerController: {fileID: 6986208017356793829}
+  playerCamera: {fileID: 3930753891858955277}
+  showDebugRay: 1
+  debugRayColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!20 &3930753891858955272 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 1767192439, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
@@ -1410,6 +1428,36 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
   m_PrefabInstance: {fileID: 3930753892247767935}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3930753892314668144 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 202364687, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 3930753892247767935}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6692296000251354109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3930753892314668144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce5d14a266c1e34f9e04bda2598a8f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDistance: 50
+  grappleSpeed: 10
+  grappleJumpBoost: 5
+  grappleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  lineRenderer: {fileID: 0}
+  lineRendererRetractSpeed: 5
+  grappleAction: {fileID: 0}
+  playerController: {fileID: 6986208017356793829}
+  playerCamera: {fileID: 0}
+  showDebugRay: 1
+  debugRayColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!143 &6986208017356793829 stripped
 CharacterController:
   m_CorrespondingSourceObject: {fileID: 6232745470614056090, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}

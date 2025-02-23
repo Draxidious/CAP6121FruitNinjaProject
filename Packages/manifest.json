@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.huggingface.api": "https://github.com/huggingface/unity-api.git",
+    "com.meta.xr.sdk.voice": "71.0.0",
     "com.unity.collab-proxy": "2.7.1",
     "com.unity.feature.development": "1.0.2",
     "com.unity.inputsystem": "1.13.0",
