@@ -95,7 +95,7 @@ public class MoldFruitsProcessor : MonoBehaviour
 			{
 				GameObject fruitObject = fruitTransform.gameObject;
 				Debug.Log("Molding fruit:  " + fruitObject.name);
-				fruitObject.transform.localScale = new Vector3(1.2f, 0.8f, 1.2f);
+				//fruitObject.transform.localScale = new Vector3(1.2f, 0.8f, 1.2f);
 			}
 		}
 		else
