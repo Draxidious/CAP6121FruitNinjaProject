@@ -4,7 +4,6 @@ public class ProjectileDamage : MonoBehaviour
 {
     [SerializeField] private float speedThreshold = 5.0f; // Minimum speed to deal damage
     [SerializeField] private float damage = 20f; // Damage dealt to enemies
-    [SerializeField] private bool destroyOnImpact = true; // Destroy the projectile on hit
 
     private Rigidbody rb;
 
@@ -27,12 +26,8 @@ public class ProjectileDamage : MonoBehaviour
                 if (enemyAI != null)
                 {
                     enemyAI.TakeProjectileDamage(damage);
+                    Destroy(gameObject); // Destroy the projectile after impact
                 }
-            }
-
-            if (destroyOnImpact)
-            {
-                Destroy(gameObject); // Destroy the projectile after impact
             }
         }
     }

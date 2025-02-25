@@ -24,4 +24,16 @@ public class TakePlayerDamage : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("collision tag: " + other.gameObject.tag);
+        if (other.gameObject.CompareTag("Projectile"))
+        {
+            if (player.TakeDamage(other.gameObject.GetComponent<EnemyProjectile>().damage))
+            {
+                vignette.TriggerVignetteEffect(duration);
+            }
+        }
+    }
 }

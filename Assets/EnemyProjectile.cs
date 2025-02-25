@@ -4,13 +4,14 @@ public class EnemyProjectile : MonoBehaviour
 {
     public float speed = 10f;
     public float lifetime = 5f;
+    public float damage = 12f;
 
     private Transform player;
     private Vector3 direction;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = GameObject.FindGameObjectWithTag("MainCamera")?.transform;
         if (player != null)
         {
             direction = (player.position - transform.position).normalized;
@@ -26,10 +27,10 @@ public class EnemyProjectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if(!other.CompareTag("Enemy"))
         {
-            // Handle damage to player here
             Destroy(gameObject);
         }
+        
     }
 }
