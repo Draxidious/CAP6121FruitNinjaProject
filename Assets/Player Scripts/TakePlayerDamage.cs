@@ -4,7 +4,7 @@ using UnityEngine.Rendering.PostProcessing;
 using System.Collections;
 
 
-public class TakePlayerDamage : MonoBehaviour
+public class OnPlayerCollision : MonoBehaviour
 {
     public Player player;
     public float duration = 0.5f;
@@ -34,6 +34,13 @@ public class TakePlayerDamage : MonoBehaviour
             {
                 vignette.TriggerVignetteEffect(duration);
             }
+        }
+
+        if (other.gameObject.CompareTag("Collectible"))
+        {
+            player.sweetTreats++;
+            player.HealPlayer(player.maxHealth/2);
+            Destroy(other.gameObject);
         }
     }
 }

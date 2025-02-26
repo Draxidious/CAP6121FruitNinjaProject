@@ -156,7 +156,7 @@ MonoBehaviour:
   damage: 10
   detectionRadius: 10
   projectilePrefab: {fileID: 7261002167260304368, guid: df6179c7aae6ae649b68af03f7ebddea, type: 3}
-  shootInterval: 2
+  shootInterval: 3
   jumpForce: 5
   jumpInterval: 2
   moveAwayFromPlayer: 1
