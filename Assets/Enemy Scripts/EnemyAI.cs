@@ -6,6 +6,7 @@ public class EnemyAI : MonoBehaviour
     public float health = 100f;
     public float damage = 10f;
     public float detectionRadius = 10f;
+    public float shootRadius = 15f; // Larger than detectionRadius
     public GameObject projectilePrefab;
     public float shootInterval = 2f;
     public float jumpForce = 5f;
@@ -56,7 +57,7 @@ public class EnemyAI : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
-        if (canShoot && Time.time >= nextShootTime)
+        if (canShoot && distance <= shootRadius && Time.time >= nextShootTime)
         {
             Shoot();
             nextShootTime = Time.time + shootInterval;
@@ -148,5 +149,8 @@ public class EnemyAI : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, shootRadius);
     }
 }

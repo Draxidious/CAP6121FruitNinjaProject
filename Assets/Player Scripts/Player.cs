@@ -1,32 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     [Header("Player Settings")]
     public float health = 100f;
-    private float maxHealth;
+    public float maxHealth = 100f;
     public GameObject playerStart; // Reference to the PlayerStart object
     public float damageCooldown = 1f; // Cooldown time between taking damage in seconds
+    public int sweetTreats = 0; // Number of sweet treats collected
+    public int sweetMax = 10; // Number of sweet treats collected
 
-    [Header("Health Bar Settings")]
+    [Header("UI Settings")]
     public RectTransform healthBarTransform;
+    public TMP_Text sweetTreatsCount;
 
     private bool canTakeDamage = true;
     private float initialHealthBarWidth;
+    
 
-    
-    
 
     void Start()
     {
-        maxHealth = health;
         initialHealthBarWidth = healthBarTransform.sizeDelta.x; // Store initial width
     }
 
     void Update()
     {
-      
+        sweetTreatsCount.text = sweetTreats.ToString() + " / " + sweetMax;
     }
 
     // Function to teleport the player to the PlayerStart position
@@ -65,6 +67,17 @@ public class Player : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void HealPlayer(float healAmount)
+    {
+        health += healAmount;
+        health = Mathf.Clamp(health, 0, maxHealth);
+        if (healthBarTransform != null)
+        {
+            float healthPercentage = Mathf.Clamp01((float)health / maxHealth);
+            healthBarTransform.sizeDelta = new Vector2(healthPercentage * initialHealthBarWidth, healthBarTransform.sizeDelta.y);
+        }
     }
 
     private void ResetDamageCooldown()
