@@ -18,8 +18,8 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "3aed91ca-40ac-49d0-95d4-f36046dbc495",
-                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "id": "b0a2e266-c3ee-43a2-93b6-4af0de68a0a7",
+                    "path": "<QuestTouchPlusController>/triggerPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -29,8 +29,8 @@
                 },
                 {
                     "name": "",
-                    "id": "c9d59a8b-fbc6-4f1f-aef8-0aedd754d9f5",
-                    "path": "<XRSimulatedController>{LeftHand}/triggerButton",
+                    "id": "6f9b18bd-ea19-4962-a999-062694b99987",
+                    "path": "<XRInputV1::Oculus::MetaQuestTouchPlusControllerOpenXR>/secondarybutton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

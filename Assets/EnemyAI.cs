@@ -23,6 +23,7 @@ public class EnemyAI : MonoBehaviour
     private float nextJumpTime;
     private bool isTouchingPlayer = false;
     private bool canTakeDamage = true;
+    public float moldTime; 
 
     void Start()
     {

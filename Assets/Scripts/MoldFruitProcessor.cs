@@ -20,7 +20,7 @@ public class MoldFruitsProcessor : MonoBehaviour
 			Debug.LogError("Wit component not assigned!");
 			return;
 		}
-		Debug.Log("Start");
+		//Debug.Log("Start");
 
 		wit.VoiceEvents.OnFullTranscription.AddListener(HandleTranscription);
 		wit.VoiceEvents.OnResponse.AddListener(HandleWitResponse);
@@ -35,7 +35,7 @@ public class MoldFruitsProcessor : MonoBehaviour
 			if (wit != null && !wit.Active)
 			{
 				wit.Activate();
-				Debug.Log("Listening");
+				//Debug.Log("Listening");
 			}
 			yield return new WaitForSeconds(listenInterval);
 		}
@@ -48,17 +48,17 @@ public class MoldFruitsProcessor : MonoBehaviour
 
 	private void HandleWitResponse(WitResponseNode response)
 	{
-		Debug.Log("Response: " +response.ToString());
+		//Debug.Log("Response: " +response.ToString());
 
 		// Correct way to check for a valid response:
 		if (response != null && response["text"] != null)
 		{
-			Debug.Log("Reached Handle Wit inside if");
+			//Debug.Log("Reached Handle Wit inside if");
 			// Check for intents
 			if (response["intents"] != null && response["intents"].Count > 0)
 			{
 				string intent = response["intents"][0]["name"].Value;
-				Debug.Log("Intent: " + intent);
+				//Debug.Log("Intent: " + intent);
 
 				if (intent == "mold_fruit")
 				{
@@ -78,7 +78,7 @@ public class MoldFruitsProcessor : MonoBehaviour
 		else
 		{
 			// Handle null or invalid response (e.g., network error, Wit.ai service down)
-			Debug.LogError("Invalid Wit response received.");
+			//Debug.LogError("Invalid Wit response received.");
 		}
 	}
 
@@ -100,7 +100,7 @@ public class MoldFruitsProcessor : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogError("Fruits parent object not assigned!");
+			//Debug.LogError("Fruits parent object not assigned!");
 		}
 	}
 

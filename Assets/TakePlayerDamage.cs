@@ -15,7 +15,7 @@ public class TakePlayerDamage : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log("collision tag: " + other.gameObject.tag);
+        //Debug.Log("collision tag: " + other.gameObject.tag);
         if (other.gameObject.CompareTag("Enemy"))
         {
             if (player.TakeDamage(other.gameObject.GetComponent<EnemyAI>().damage))
