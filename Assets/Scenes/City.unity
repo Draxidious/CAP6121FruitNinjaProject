@@ -20751,6 +20751,7 @@ MonoBehaviour:
   flyHeight: 10
   timetoFlyHeight: 1
   flyTime: 5
+  unicycle: {fileID: 5204017030700160263}
 --- !u!1 &5314130356418060095
 GameObject:
   m_ObjectHideFlags: 0
@@ -25719,6 +25720,7 @@ MonoBehaviour:
   flyHeight: 3
   timetoFlyHeight: 1
   flyTime: 0.8
+  unicycle: {fileID: 0}
 --- !u!114 &8311235129022801588
 MonoBehaviour:
   m_ObjectHideFlags: 0

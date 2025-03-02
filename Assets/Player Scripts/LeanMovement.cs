@@ -24,6 +24,8 @@ public class LeanMovement : MonoBehaviour
 	private bool Xpressed = false;
 	float verticalVelocity = 0f;
 
+	float groundHeight;
+
 
 	private InputData inputData;
 
@@ -44,21 +46,33 @@ public class LeanMovement : MonoBehaviour
 	private bool isFlyingAtHeight = false;
 
 
+	bool isDucked = false;
+	float duckTime = 3f;
+	float elapsedDuckTime = 0f;
+	bool Ypressed = false;
+	float duckHeight = 0.2f;
+	public GameObject unicycle;
+
+
+	float initialHeight;
 
 	void Start()
 	{
+		groundHeight = headTransform.position.y;
 		inputData = GetComponent<InputData>();
 		if (headTransform == null)
 			headTransform = Camera.main.transform;
+		initialYPosition = headTransform.position.y;
 
 		initialZ = headTransform.localPosition.z;
+		initialHeight = characterController.height;
 
 	}
 
 	void Update()
 	{
 		// --- Input and Movement Enabling (Your existing code) ---
-		if (IsAButtonPressed())
+		if (IsAButtonPressed() && !isFlying && !isJumping && !isDucked)
 		{
 			if (!buttonPressed)
 			{
@@ -84,7 +98,7 @@ public class LeanMovement : MonoBehaviour
 		}
 
 		// --- Jump Input and State ---
-		if (!isJumping) // VERY IMPORTANT: Only allow jump if grounded
+		if (!isJumping && !isFlying) // VERY IMPORTANT: Only allow jump if grounded
 		{
 			//Reset values.
 			elapsedTime = 0;
@@ -95,7 +109,7 @@ public class LeanMovement : MonoBehaviour
 					Debug.LogWarning("jump started");
 					Bpressed = true;
 					isJumping = true;
-					initialYPosition = transform.position.y; // Store CharacterController's Y
+					//initialYPosition = headTransform.position.y;// Store CharacterController's Y
 					initialJumpVelocity = CalculateInitialJumpVelocity(jumpHeight, jumpTime / 2f); // Calculate *once*
 					elapsedTime = 0f; // Reset the jump timer
 				}
@@ -105,9 +119,7 @@ public class LeanMovement : MonoBehaviour
 				Bpressed = false;
 			}
 		}
-
-
-		if (!isFlying && characterController.isGrounded) // IMPORTANT: Only allow Flying if grounded. Reset bools
+		if (!isFlying && !isJumping) // IMPORTANT: Only allow Flying if grounded. Reset bools
 		{
 			elapsedFlyTime = 0;
 			isFlyingUp = false;
@@ -120,7 +132,7 @@ public class LeanMovement : MonoBehaviour
 					Debug.LogWarning("fly started");
 					Xpressed = true;
 					isFlying = true;
-					initialYPosition = transform.position.y;
+				
 					initialFlyVelocity = CalculateInitialJumpVelocity(flyHeight, timetoFlyHeight); // Use jump velocity calc
 					elapsedFlyTime = 0f; // Reset the fly timer
 					isFlyingUp = true; // Start in the "flying up" phase
@@ -132,8 +144,31 @@ public class LeanMovement : MonoBehaviour
 				Xpressed = false;
 			}
 		}
+		if (!isDucked && !isFlying && !isJumping)
+		{
+			elapsedDuckTime = 0;
+			isDucked = false;
 
 
+			if (IsYButtonPressed())
+			{
+				if (!Ypressed)
+				{
+					Debug.LogWarning("duck started");
+					Ypressed = true;
+					isDucked = true;
+					//initialYPosition = headTransform.position.y;
+					headTransform.position = new Vector3(headTransform.position.x, 0, headTransform.position.z);
+					characterController.height = duckHeight;
+
+				}
+			}
+			else
+			{
+				Ypressed = false;
+			}
+
+		}
 		// --- Lean Movement Calculation (Your existing code) ---
 		float xOffset = headTransform.localPosition.x - initialX;
 		float zOffset = headTransform.localPosition.z - initialZ;
@@ -184,15 +219,29 @@ public class LeanMovement : MonoBehaviour
 			}
 
 		}
-		else if (!characterController.isGrounded)
+		if(!isJumping && !isFlying && headTransform.position.y > initialYPosition)
 		{ //Handles falling
 		  //Apply default gravity when not on the ground and not jumping
-			verticalVelocity += Physics.gravity.y * Time.deltaTime; // Apply gravity
+			verticalVelocity = -9.8f;
+			float heightDif = Mathf.Abs(headTransform.position.y - groundHeight);
+			//characterController.transform.position = new Vector3(characterController.transform.position.x, characterController.transform.position.y - heightDif, characterController.transform.position.z);
 		}
-		else
+		//else
+		//{
+		//	verticalVelocity = 0f;
+		//}
+
+		if(!isJumping &&  !isFlying && isDucked)
 		{
-			verticalVelocity = 0f;
-		}
+			elapsedDuckTime += Time.deltaTime;
+			if(elapsedDuckTime >= duckTime)
+			{
+				headTransform.position = new Vector3(headTransform.position.x, initialHeight, headTransform.position.z);
+				unicycle.SetActive(true);
+				characterController.height = initialHeight;
+				isDucked = false;
+			}
+		} 
 
 		Vector3 moveDirection = (characterController.transform.right * currentSpeedX) +
 								(characterController.transform.forward * currentSpeedZ) + (Vector3.up * verticalVelocity);
@@ -215,6 +264,17 @@ public class LeanMovement : MonoBehaviour
 	{
 		bool isPressed = false;
 		if (inputData._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool value) && value)
+		{
+			isPressed = true;
+		}
+
+		return isPressed;
+	}
+
+	private bool IsYButtonPressed()
+	{
+		bool isPressed = false;
+		if (inputData._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool value) && value)
 		{
 			isPressed = true;
 		}
@@ -280,7 +340,7 @@ public class LeanMovement : MonoBehaviour
 	/// <param name="elapsedTime">The time elapsed since the jump started.</param>
 	///  <param name="initialYPosition"> starting y position</param>
 	/// <returns>The current Y position.</returns>
-	public float CalculateJumpYPosition(float jumpHeight, float jumpTime, ref float elapsedTime, float initialYPosition = 0)
+	public float CalculateJumpYPosition(float jumpHeight, float jumpTime, ref float elapsedTime)
 	{
 		if (characterController == null)
 		{
