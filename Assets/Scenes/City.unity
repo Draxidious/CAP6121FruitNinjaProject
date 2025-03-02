@@ -20748,9 +20748,9 @@ MonoBehaviour:
   currentSpeedZ: 0
   jumpHeight: 1
   jumpTime: 0.8
-  flyHeight: 5
+  flyHeight: 10
+  timetoFlyHeight: 1
   flyTime: 5
-  timeToFlyheight: 2
 --- !u!1 &5314130356418060095
 GameObject:
   m_ObjectHideFlags: 0
@@ -25716,9 +25716,9 @@ MonoBehaviour:
   currentSpeedZ: 0
   jumpHeight: 1
   jumpTime: 0.8
-  flyHeight: 5
-  flyTime: 5
-  timeToFlyheight: 2
+  flyHeight: 3
+  timetoFlyHeight: 1
+  flyTime: 0.8
 --- !u!114 &8311235129022801588
 MonoBehaviour:
   m_ObjectHideFlags: 0

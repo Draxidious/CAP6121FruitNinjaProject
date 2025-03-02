@@ -22,7 +22,7 @@ public class LeanMovement : MonoBehaviour
 	private bool buttonPressed = false;
 	private bool Bpressed = false;
 	private bool Xpressed = false;
-	float verticalVelocity =0f;
+	float verticalVelocity = 0f;
 
 
 	private InputData inputData;
@@ -34,6 +34,15 @@ public class LeanMovement : MonoBehaviour
 	private float elapsedTime = 0f;
 	private float initialJumpVelocity;
 
+	private bool isFlying = false;
+	public float flyHeight = 3.0f; // Set your desired jump height
+	public float timetoFlyHeight = 1.0f;
+	public float flyTime = 0.8f; // Total jump time (up and down)
+	private float elapsedFlyTime = 0f;
+	private float initialFlyVelocity;
+	private bool isFlyingUp = false;
+	private bool isFlyingAtHeight = false;
+
 
 
 	void Start()
@@ -43,7 +52,7 @@ public class LeanMovement : MonoBehaviour
 			headTransform = Camera.main.transform;
 
 		initialZ = headTransform.localPosition.z;
-		
+
 	}
 
 	void Update()
@@ -77,6 +86,7 @@ public class LeanMovement : MonoBehaviour
 		// --- Jump Input and State ---
 		if (!isJumping) // VERY IMPORTANT: Only allow jump if grounded
 		{
+			//Reset values.
 			elapsedTime = 0;
 			if (IsBButtonPressed())
 			{
@@ -97,10 +107,30 @@ public class LeanMovement : MonoBehaviour
 		}
 
 
-		if (!characterController.isGrounded && !isJumping)
+		if (!isFlying && characterController.isGrounded) // IMPORTANT: Only allow Flying if grounded. Reset bools
 		{
-			//Apply default gravity when not on the ground and not jumping
-			characterController.Move(new Vector3(0, Physics.gravity.y, 0) * Time.deltaTime);
+			elapsedFlyTime = 0;
+			isFlyingUp = false;
+			isFlyingAtHeight = false;
+
+			if (IsXButtonPressed())
+			{
+				if (!Xpressed)
+				{
+					Debug.LogWarning("fly started");
+					Xpressed = true;
+					isFlying = true;
+					initialYPosition = transform.position.y;
+					initialFlyVelocity = CalculateInitialJumpVelocity(flyHeight, timetoFlyHeight); // Use jump velocity calc
+					elapsedFlyTime = 0f; // Reset the fly timer
+					isFlyingUp = true; // Start in the "flying up" phase
+					isFlyingAtHeight = false;
+				}
+			}
+			else
+			{
+				Xpressed = false;
+			}
 		}
 
 
@@ -120,11 +150,38 @@ public class LeanMovement : MonoBehaviour
 		currentSpeedZ = Mathf.Lerp(currentSpeedZ, targetSpeedZ, acceleration * Time.deltaTime);
 
 		// --- Jump Calculation and Movement ---
-		
+
 
 		if (isJumping)
 		{
 			verticalVelocity = CalculateJumpYVelocity(initialJumpVelocity, jumpTime, ref elapsedTime);
+
+		}
+		// --- Flying Calculation and Movement ---
+		else if (isFlying)
+		{
+			if (isFlyingUp)
+			{
+				verticalVelocity = CalculateJumpYVelocity(initialFlyVelocity, timetoFlyHeight, ref elapsedFlyTime);
+				if (elapsedFlyTime >= timetoFlyHeight)  // Check for reaching fly height using >= for precision
+				{
+					isFlyingUp = false;
+					isFlyingAtHeight = true;
+					elapsedFlyTime = 0f; // Reset timer for the "at height" phase
+					verticalVelocity = 0; // Stop upward movement
+				}
+			}
+			else if (isFlyingAtHeight)
+			{
+
+				elapsedFlyTime += Time.deltaTime; // Keep track of time at height
+				if (elapsedFlyTime >= flyTime)
+				{
+					isFlyingAtHeight = false;
+					isFlying = false; // End flying
+					verticalVelocity = 0; //Ensure we don't keep flying
+				}
+			}
 
 		}
 		else if (!characterController.isGrounded)
@@ -132,9 +189,13 @@ public class LeanMovement : MonoBehaviour
 		  //Apply default gravity when not on the ground and not jumping
 			verticalVelocity += Physics.gravity.y * Time.deltaTime; // Apply gravity
 		}
+		else
+		{
+			verticalVelocity = 0f;
+		}
 
 		Vector3 moveDirection = (characterController.transform.right * currentSpeedX) +
-								(characterController.transform.forward * currentSpeedZ)+ (Vector3.up * verticalVelocity);
+								(characterController.transform.forward * currentSpeedZ) + (Vector3.up * verticalVelocity);
 		characterController.Move(moveDirection * Time.deltaTime);  // Apply horizontal movement
 	}
 
@@ -190,12 +251,12 @@ public class LeanMovement : MonoBehaviour
 	{
 		if (characterController == null)
 		{
-			Debug.LogError("CharacterController is null.  Ensure Start() has run.");
+			Debug.LogError("CharacterController is null.  Ensure Start() has run.");
 			return 0f;
 		}
 
 
-		if (elapsedTime > jumpTime)
+		if (!isFlying && elapsedTime > jumpTime)
 		{
 			// Jump is complete.
 			isJumping = false;
@@ -217,13 +278,13 @@ public class LeanMovement : MonoBehaviour
 	/// <param name="jumpHeight">The height of the jump</param>
 	/// <param name="jumpTime">The *total* duration of the jump.</param>
 	/// <param name="elapsedTime">The time elapsed since the jump started.</param>
-	///  <param name="initialYPosition"> starting y position</param>
+	///  <param name="initialYPosition"> starting y position</param>
 	/// <returns>The current Y position.</returns>
 	public float CalculateJumpYPosition(float jumpHeight, float jumpTime, ref float elapsedTime, float initialYPosition = 0)
 	{
 		if (characterController == null)
 		{
-			Debug.LogError("CharacterController is null.  Ensure Start() has run.");
+			Debug.LogError("CharacterController is null.  Ensure Start() has run.");
 			return 0f;
 		}
 
@@ -242,7 +303,7 @@ public class LeanMovement : MonoBehaviour
 			initialVelocity = CalculateInitialJumpVelocity(jumpHeight, jumpTime / 2); // timeToJumpApex is half jumpTime
 		}
 
-		// Kinematic equation:  d = v_i*t + 0.5*a*t^2
+		// Kinematic equation:  d = v_i*t + 0.5*a*t^2
 
 		float currentYPosition = initialYPosition + (initialVelocity * elapsedTime) + (0.5f * Physics.gravity.y * elapsedTime * elapsedTime);
 
