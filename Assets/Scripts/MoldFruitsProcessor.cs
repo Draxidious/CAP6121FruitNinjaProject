@@ -91,16 +91,11 @@ public class MoldFruitsProcessor : MonoBehaviour
 	{
 		if (fruitsParent != null)
 		{
-			foreach (Transform fruitTransform in fruitsParent.transform)
-			{
-				GameObject fruitObject = fruitTransform.gameObject;
-				Debug.Log("Molding fruit:  " + fruitObject.name);
-				//fruitObject.transform.localScale = new Vector3(1.2f, 0.8f, 1.2f);
-			}
+			fruitsParent.GetComponent<EnemyManager>().Mold();
 		}
 		else
 		{
-			//Debug.LogError("Fruits parent object not assigned!");
+			Debug.LogError("Fruits parent object not assigned!");
 		}
 	}
 

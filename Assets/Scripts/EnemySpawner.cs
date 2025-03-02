@@ -23,10 +23,10 @@ public class EnemySpawner : MonoBehaviour
 
 	void Start()
 	{
-		SpawnAllObjects();
+		
 	}
 
-	void SpawnAllObjects()
+	public void SpawnAllObjects()
 	{
 		if (parentObject == null)
 		{
@@ -43,7 +43,7 @@ public class EnemySpawner : MonoBehaviour
 		}
 	}
 
-	void SpawnObjectAtRandomPosition(SpawnObject spawnObject)
+	public void SpawnObjectAtRandomPosition(SpawnObject spawnObject)
 	{
 		float randomX = Random.Range(minX, maxX);
 		float randomZ = Random.Range(minZ, maxZ);

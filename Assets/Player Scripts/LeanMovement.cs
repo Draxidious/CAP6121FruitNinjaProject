@@ -1,119 +1,256 @@
-using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.InputSystem; // If you're using the new Input System
 using UnityEngine.XR;
 
 [RequireComponent(typeof(InputData))]
 public class LeanMovement : MonoBehaviour
 {
-    public Transform headTransform; // Assign the VR headset transform (e.g., Camera.main.transform)
-    public CharacterController characterController; // Assign the CharacterController component
-    public float maxSpeed = 3.0f; // Maximum movement speed
-    public float acceleration = 2.0f; // How quickly the player reaches max speed
-    public float leanThreshold = 0.1f; // How much the player needs to lean to start moving
+	public Transform headTransform; // Assign the VR headset transform
+	public CharacterController characterController;
+	public float maxSpeed = 3.0f;
+	public float acceleration = 2.0f;
+	public float leanThreshold = 0.1f;
 
-    public float gravity = 9.81f; // Gravity force
-    public float groundCheckDistance = 0.2f; // Distance to check if grounded
-    public LayerMask groundLayer; // Assign ground layer in Inspector
+	public float gravity = 9.81f;
+	public LayerMask groundLayer; // Assign ground layer in Inspector (for isGrounded)
 
-    public float initialX; // Initial side-to-side position
-    public float initialZ; // Initial forward-backward position
-    public float currentSpeedX = 0.0f; // Current speed for left-right
-    public float currentSpeedZ = 0.0f; // Current speed for forward-backward
-    private float verticalVelocity = 0.0f; // Stores the downward velocity (gravity effect)
-    private bool movementEnabled = false; // Toggle for lean movement
-    private bool buttonPressed = false;
+	public float initialX;
+	public float initialZ;
+	public float currentSpeedX = 0.0f;
+	public float currentSpeedZ = 0.0f;
+	private bool movementEnabled = false;
+	private bool buttonPressed = false;
+	private bool Bpressed = false;
+	private bool Xpressed = false;
+	float verticalVelocity =0f;
 
-    private InputData inputData;
 
-    void Start()
-    {
-        inputData = GetComponent<InputData>();
-        if (headTransform == null)
-            headTransform = Camera.main.transform; // Default to the main camera if not assigned
+	private InputData inputData;
 
-        initialZ = headTransform.localPosition.z; // Store initial Z position
-    }
+	float initialYPosition;  // Corrected: Store *CharacterController's* Y position
+	bool isJumping = false;
+	public float jumpHeight = 1.0f; // Set your desired jump height
+	public float jumpTime = 0.8f; // Total jump time (up and down)
+	private float elapsedTime = 0f;
+	private float initialJumpVelocity;
 
-    void Update()
-    {
-        // Check if the player presses the "A" button
-        if (IsAButtonPressed())
-        {
-            if (!buttonPressed)
-            {
-                buttonPressed = true;
-                movementEnabled = !movementEnabled; // Toggle movement state
 
-                if (movementEnabled)
-                    initialZ = headTransform.localPosition.z; // Reset initial position when enabling movement
-				    initialX = headTransform.localPosition.x;
+
+	void Start()
+	{
+		inputData = GetComponent<InputData>();
+		if (headTransform == null)
+			headTransform = Camera.main.transform;
+
+		initialZ = headTransform.localPosition.z;
+		
+	}
+
+	void Update()
+	{
+		// --- Input and Movement Enabling (Your existing code) ---
+		if (IsAButtonPressed())
+		{
+			if (!buttonPressed)
+			{
+				buttonPressed = true;
+				movementEnabled = !movementEnabled;
+				if (movementEnabled)
+				{
+					initialZ = headTransform.localPosition.z;
+					initialX = headTransform.localPosition.x;
+				}
 			}
+		}
+		else
+		{
+			buttonPressed = false;
+		}
 
-        }
-        else
-        {
-            buttonPressed = false;
-        }
+		if (!movementEnabled)
+		{
+			currentSpeedX = 0.0f;
+			currentSpeedZ = 0.0f;
+			return;
+		}
 
-        if (!movementEnabled)
-        {
-            currentSpeedX = 0.0f; // Stop movement when disabled
-            currentSpeedZ = 0.0f; // Stop movement when disabled
-            return;
-        }
+		// --- Jump Input and State ---
+		if (!isJumping) // VERY IMPORTANT: Only allow jump if grounded
+		{
+			elapsedTime = 0;
+			if (IsBButtonPressed())
+			{
+				if (!Bpressed)
+				{
+					Debug.LogWarning("jump started");
+					Bpressed = true;
+					isJumping = true;
+					initialYPosition = transform.position.y; // Store CharacterController's Y
+					initialJumpVelocity = CalculateInitialJumpVelocity(jumpHeight, jumpTime / 2f); // Calculate *once*
+					elapsedTime = 0f; // Reset the jump timer
+				}
+			}
+			else
+			{
+				Bpressed = false;
+			}
+		}
 
-        float xOffset = headTransform.localPosition.x - initialX; // Left-right lean
-        float zOffset = headTransform.localPosition.z - initialZ; // Forward-backward lean
-        float targetSpeedX = 0.0f; // Default no left-right movement
-        float targetSpeedZ = 0.0f; // Default no forward-backward movement
 
-        // Left-Right Movement
-        if (xOffset > leanThreshold) // Leaning right
-            targetSpeedX = maxSpeed;
-        else if (xOffset < -leanThreshold) // Leaning left
-            targetSpeedX = -maxSpeed;
+		if (!characterController.isGrounded && !isJumping)
+		{
+			//Apply default gravity when not on the ground and not jumping
+			characterController.Move(new Vector3(0, Physics.gravity.y, 0) * Time.deltaTime);
+		}
 
-        // Forward-Backward Movement
-        if (zOffset > leanThreshold) // Leaning forward
-            targetSpeedZ = maxSpeed;
-        else if (zOffset < -leanThreshold) // Leaning backward
-            targetSpeedZ = -maxSpeed;
 
-        // Smooth acceleration using Mathf.Lerp
-        currentSpeedX = Mathf.Lerp(currentSpeedX, targetSpeedX, acceleration * Time.deltaTime);
-        currentSpeedZ = Mathf.Lerp(currentSpeedZ, targetSpeedZ, acceleration * Time.deltaTime);
+		// --- Lean Movement Calculation (Your existing code) ---
+		float xOffset = headTransform.localPosition.x - initialX;
+		float zOffset = headTransform.localPosition.z - initialZ;
+		float targetSpeedX = 0.0f;
+		float targetSpeedZ = 0.0f;
 
-        // Check if grounded using a Raycast
-        bool isGrounded = Physics.Raycast(characterController.transform.position, Vector3.down, groundCheckDistance, groundLayer);
+		if (xOffset > leanThreshold) targetSpeedX = maxSpeed;
+		else if (xOffset < -leanThreshold) targetSpeedX = -maxSpeed;
 
-        if (isGrounded && verticalVelocity < 0)
-        {
-            verticalVelocity = -2f; // Small downward force to keep player grounded
-        }
-        else
-        {
-            verticalVelocity -= gravity * Time.deltaTime; // Apply gravity
-        }
+		if (zOffset > leanThreshold) targetSpeedZ = maxSpeed;
+		else if (zOffset < -leanThreshold) targetSpeedZ = -maxSpeed;
 
-        // Move player using CharacterController
-        Vector3 moveDirection = (characterController.transform.right * currentSpeedX) +
-                                (characterController.transform.forward * currentSpeedZ) +
-                                (Vector3.up * verticalVelocity);
+		currentSpeedX = Mathf.Lerp(currentSpeedX, targetSpeedX, acceleration * Time.deltaTime);
+		currentSpeedZ = Mathf.Lerp(currentSpeedZ, targetSpeedZ, acceleration * Time.deltaTime);
 
-        characterController.Move(moveDirection * Time.deltaTime);
-    }
+		// --- Jump Calculation and Movement ---
+		
 
-    // Function to check if the "A" button is pressed
-    private bool IsAButtonPressed()
-    {
-        bool isPressed = false;
-        if (inputData._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool value) && value)
-        {
-            isPressed = true;
-        }
+		if (isJumping)
+		{
+			verticalVelocity = CalculateJumpYVelocity(initialJumpVelocity, jumpTime, ref elapsedTime);
 
-        return isPressed;
-    }
+		}
+		else if (!characterController.isGrounded)
+		{ //Handles falling
+		  //Apply default gravity when not on the ground and not jumping
+			verticalVelocity += Physics.gravity.y * Time.deltaTime; // Apply gravity
+		}
+
+		Vector3 moveDirection = (characterController.transform.right * currentSpeedX) +
+								(characterController.transform.forward * currentSpeedZ)+ (Vector3.up * verticalVelocity);
+		characterController.Move(moveDirection * Time.deltaTime);  // Apply horizontal movement
+	}
+
+	// --- Input Functions (Your existing code) ---
+	private bool IsAButtonPressed()
+	{
+		bool isPressed = false;
+		if (inputData._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool value) && value)
+		{
+			isPressed = true;
+		}
+
+		return isPressed;
+	}
+
+	private bool IsBButtonPressed()
+	{
+		bool isPressed = false;
+		if (inputData._rightController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool value) && value)
+		{
+			isPressed = true;
+		}
+
+		return isPressed;
+	}
+
+	private bool IsXButtonPressed()
+	{
+		bool isPressed = false;
+		if (inputData._leftController.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool value) && value)
+		{
+			isPressed = true;
+		}
+
+		return isPressed;
+	}
+
+	// --- Jump Calculation Functions (From previous examples) ---
+	public float CalculateInitialJumpVelocity(float jumpHeight, float timeToJumpApex)
+	{
+		if (timeToJumpApex <= 0)
+		{
+			Debug.LogWarning("TimeToJumpApex must be greater than zero.");
+			return 0f;
+		}
+
+		float initialVelocity = (2f * jumpHeight) / timeToJumpApex;
+		return initialVelocity;
+	}
+
+
+	public float CalculateJumpYVelocity(float initialYVelocity, float initialYPosition, ref float elapsedTime)
+	{
+		if (characterController == null)
+		{
+			Debug.LogError("CharacterController is null.  Ensure Start() has run.");
+			return 0f;
+		}
+
+
+		if (elapsedTime > jumpTime)
+		{
+			// Jump is complete.
+			isJumping = false;
+			return 0f;
+
+		}
+
+		//Basic kinematic equation v_f = v_i + a*t.
+		float currentYVelocity = initialYVelocity + Physics.gravity.y * elapsedTime;
+
+		elapsedTime += Time.deltaTime;
+
+		return currentYVelocity;
+	}
+
+	/// <summary>
+	/// Calculates and updates the character's Y velocity over time during a jump.
+	/// </summary>
+	/// <param name="jumpHeight">The height of the jump</param>
+	/// <param name="jumpTime">The *total* duration of the jump.</param>
+	/// <param name="elapsedTime">The time elapsed since the jump started.</param>
+	///  <param name="initialYPosition"> starting y position</param>
+	/// <returns>The current Y position.</returns>
+	public float CalculateJumpYPosition(float jumpHeight, float jumpTime, ref float elapsedTime, float initialYPosition = 0)
+	{
+		if (characterController == null)
+		{
+			Debug.LogError("CharacterController is null.  Ensure Start() has run.");
+			return 0f;
+		}
+
+		if (elapsedTime > jumpTime)
+		{
+			isJumping = false;
+			elapsedTime = jumpTime;  // Cap at jumpTime.
+		}
+
+
+		float initialVelocity = 0;
+
+		// Only calculate the initial velocity if we are starting the jump (elapsed time is 0 or a very small value)
+		if (elapsedTime < 0.001f)  // Use a small tolerance to account for floating-point imprecision
+		{
+			initialVelocity = CalculateInitialJumpVelocity(jumpHeight, jumpTime / 2); // timeToJumpApex is half jumpTime
+		}
+
+		// Kinematic equation:  d = v_i*t + 0.5*a*t^2
+
+		float currentYPosition = initialYPosition + (initialVelocity * elapsedTime) + (0.5f * Physics.gravity.y * elapsedTime * elapsedTime);
+
+		//Clamp above ground level, accounting for charactercontroller center and height
+		float groundLevel = initialYPosition - characterController.height / 2f - characterController.center.y;
+
+		elapsedTime += Time.deltaTime;
+
+		return Mathf.Max(currentYPosition, groundLevel);  // Prevent going below ground.
+	}
 }

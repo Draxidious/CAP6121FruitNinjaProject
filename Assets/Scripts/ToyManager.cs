@@ -19,7 +19,7 @@ public class ToyManager : MonoBehaviour
 			}
 		}
         sandToys.SpawnChildren();
-		glow.CreateGlowObjects();
+		//glow.CreateGlowObjects();
 	}
 
     // Update is called once per frame

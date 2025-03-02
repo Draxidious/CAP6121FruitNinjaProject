@@ -16,12 +16,12 @@ public class Player : MonoBehaviour
     public RectTransform healthBarTransform;
     public TMP_Text sweetTreatsCount;
 
-    private bool canTakeDamage = true;
+    public bool canTakeDamage = true;
     private float initialHealthBarWidth;
-    
 
 
-    void Start()
+
+	void Start()
     {
         initialHealthBarWidth = healthBarTransform.sizeDelta.x; // Store initial width
     }

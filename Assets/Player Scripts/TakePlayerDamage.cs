@@ -11,6 +11,7 @@ public class OnPlayerCollision : MonoBehaviour
 
     [SerializeField] public DamageVignette vignette;
     
+    
    
 
     private void OnTriggerStay(Collider other)

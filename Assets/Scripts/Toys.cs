@@ -14,7 +14,7 @@ public class Toys : MonoBehaviour
 	public bool snapToGround = true;
 	public bool makeKinematic = true;
 
-	void Awake()
+	void Start()
 	{
 		SpawnToys();
 	}

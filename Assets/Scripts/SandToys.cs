@@ -13,7 +13,7 @@ public class SandToys : MonoBehaviour
 	public bool snapToGround = true;
 	public bool makeKinematic = true;
 
-	void Awake()
+	void Start()
 	{
 		SpawnChildren();
 	}
